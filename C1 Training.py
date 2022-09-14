@@ -1,3 +1,4 @@
+import function
 from numpy import *
 import numpy as np
 from sklearn import svm
@@ -29,12 +30,6 @@ groupname="C"
 test_size = 0.05
 num_repeat = 5
 d_f1=0
-
-def datascaler(X=None, X_max=None, X_min=None, X_mean=None):
-    for i in range(0, len(X)):
-        for j in range(0, len(X[0])):
-            X[i][j]=(X[i][j]-X_mean[j])/(X_max[j]-X_min[j])
-    return X
 
 print("start")
 
@@ -71,8 +66,8 @@ for i in range(num_repeat):
         X_test = group_test.filter(items=group_test.columns[-9:-1]).to_numpy()
         y_test = group_test.filter(items=group_test.columns[-1]).to_numpy().ravel()
 
-        X_train=datascaler(X=X_train, X_max=X_max, X_min=X_min, X_mean=X_mean)
-        X_test=datascaler(X=X_test, X_max=X_max, X_min=X_min, X_mean=X_mean)
+        X_train=function.datascaler_V3(X=X_train, X_max=X_max, X_min=X_min, X_mean=X_mean)
+        X_test=function.datascaler_V3(X=X_test, X_max=X_max, X_min=X_min, X_mean=X_mean)
 
         print("Read ",len(y_train), " training samples")
         print("Read ",len(y_test), " testing samples")
