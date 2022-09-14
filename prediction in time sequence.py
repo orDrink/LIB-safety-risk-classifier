@@ -47,7 +47,6 @@ import matplotlib
 from scipy.signal import butter, lfilter, freqz
 
 C0= 'c0_dt_scaled_test_V3_ei0_eu0_t60.model'
-# C1= 'c1_dt_scaled_test_V3_r20_100_ei0_eu0_t600.model'
 C1= 'svc_scaled_test_V3_HPC_r20_500_ei0_eu0_t600.model'
 C2= 'c2_dt_scaled_test_V3_ei0_eu0_t60.model'
 
@@ -58,7 +57,6 @@ classifer_c2 = joblib.load(C2)
 input_address="D:/ml safety risk/Project/Splited_data/"
 filename="C435" # C435 #C467 I80 CT2 CT8 IT1/2
 
-# C_rate = 0.5 #test
 data=np.loadtxt(open(input_address+filename + ".csv","rb"),delimiter=",",skiprows=0)
 parameters=3
 
@@ -91,14 +89,11 @@ X_short_mean = [3.595421184, 0.00109842, 0.099146893, 3.664921519, 0.001063486, 
 
 X=[0]*num_feature
 
-
 dU=[]
 U=[]
 I=[]
 Qc=[0]
 Uc=[0]
-
-# C_rate = abs(current[1]/current_1C)
 
 smooth_window_long = int(smooth_window)
 sequence_len_short = int(period_short*frequency)
@@ -196,12 +191,10 @@ for step in range(len(data)):
                     risk = 1
                 else:
                     risk = 0
-    # print(step,data[step, parameters+1],data[step, parameters+2],risk)
+
     x.append(step)
     y.append(data[step, parameters+1])
     z.append(risk)
-#
-
 
 x = np.array(x)
 y = np.array(y)
@@ -225,11 +218,6 @@ fs = 1
 cutoff = 0.1
 
 z_filtered=z
-#
-# b, a = butter_lowpass(cutoff, fs, order)
-# z_filtered = butter_lowpass_filter(z, cutoff, fs, order)
-# # z=np.round(z*2)/2
-# z_filtered=np.round(z_filtered)
 
 for step in range(len(data)):
     print(step,data[step, parameters+1],data[step, parameters+2],z_filtered[step],z[step])
@@ -250,88 +238,6 @@ ax2.set_ylabel(r"Risk level")
 plt.savefig('test.png')
 plt.show()
 
-
-
-
-
-# for step in range(len(data)):
-#     X=[]
-#     for i in range(len(data[0])):
-#         X.append(data[step][i])
-#     X_long =np.array(X)
-#     # print(X_long)
-#     X_long =function.datascaler_rf(X=[X_long], X_max=X_long_max, X_min=X_long_min)
-#     # print(X_long)
-#     output1 = classifer_c1.predict(X_long)
-#     if (output1==1):
-#         risk = "G1"
-#     else:
-#         risk = "G0"
-#     print(step," ",risk)
-
-
-#
-# for step in range(len(voltage)):
-#     X_long=[]
-#     Qc.append(float(current[step])*t_step+Qc[-1])
-#     Uc.append(float(voltage[step])*t_step+Uc[-1])
-#     I.append(current[step])
-#     # U.append(voltage[step])
-#     if step>smooth_window:
-#         coeff1 = np.polyfit(np.array(m_points), np.array(voltage[step-smooth_window:step]), smooth_order)
-#         dU.append(-coeff1[-2])
-#         U.append(coeff1[-1])
-#     else:
-#         dU.append(0)
-#         U.append(voltage[step])
-#
-#     if step>smooth_window+sequence_len_short:
-#         X=[]
-#         X.append(U[-1])
-#         X.append(dU[-1])
-#         X.append(I[-1])
-#         X.append(U[-sequence_len_short])
-#         X.append(dU[-sequence_len_short])
-#         X.append(I[-sequence_len_short])
-#         X.append(Qc[-1]-Qc[-sequence_len_short])
-#         X.append(Uc[-1]-Uc[-sequence_len_short])
-#
-#         X_short =np.array(X)
-#         X_short =function.datascaler_rf(X=[X_short], X_max=X_short_max, X_min=X_short_min)
-#         output0 = classifer_c0.predict(X_short)
-#         if (output0==1):
-#             output2 = classifer_c2.predict(X_short)
-#             if (output2==1):
-#                 risk = "G3"
-#             else:
-#                 risk = "G2"
-#         else:
-#             risk = "G0/1"
-#
-#     if step>smooth_window+sequence_len_long:
-#         X=[]
-#         X.append(U[-1])
-#         X.append(dU[-1])
-#         X.append(I[-1])
-#         X.append(U[-sequence_len_long])
-#         X.append(dU[-sequence_len_long])
-#         X.append(I[-sequence_len_long])
-#         X.append(Qc[-1]-Qc[-sequence_len_long])
-#         X.append(Uc[-1]-Uc[-sequence_len_long])
-#
-#         X_long =np.array(X)
-#         # print(X_long)
-#         X_long =function.datascaler_rf(X=[X_long], X_max=X_long_max, X_min=X_long_min)
-#         # print(X_long)
-#
-#         if (risk == "G0/1"):
-#             output1 = classifer_c1.predict(X_long)
-#             if (output1==1):
-#                 risk = "G1"
-#             else:
-#                 risk = "G0"
-#     print(step," ",risk)
-#
 
 
 
